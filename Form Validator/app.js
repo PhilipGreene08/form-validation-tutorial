@@ -18,34 +18,57 @@ function showSuccess(input) {
     formControl.className = 'form-control success'
 }
 
+function getFieldName(input) {
+    return input.id.charAt(0).toUpperCase() + input.id.slice(1).toLowerCase()
+}
+
+function checkRequired(inputArr) {
+    inputArr.forEach(input => {
+        if (input.value === '') {
+            showError(input, `${getFieldName(input)} is invalid`)
+        } else {
+            showSuccess(input)
+        }
+    });
+}
+
+function checkLength(input, min, max) {
+    if (input.value.length < min) {
+        showError(input, `${getFieldName(input)} cant be less than ${min} characters`)
+    } else if (input.value.length > max) {
+        showError(input, `${getFieldName(input)} cant be more than ${max} characters`)
+    } else {
+        showSuccess(input)
+    }
+}
+
+function checkEmail(input) {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    re.test(String(email).toLowerCase());
+    if (re.test(input.value.trim())) {
+        showSuccess(input)
+    } else {
+        showError(input, `Email is not valid`)
+    }
+
+}
+
+function checkPasswords(input1, input2) {
+    if (input1.value !== input2.value) {
+        showError(input2, `Passwords do not match`)
+    } else {
+        showSuccess(input2)
+    }
+}
+
 form.addEventListener('submit', function (e) {
+    checkRequired([username, email, password, password2])
+    checkLength(username, 3, 15)
+    checkLength(password, 6, 25)
+    checkEmail(email)
+    checkPasswords(password, password2)
 
-    if (username.value === '') {
-        showError(username, `Need A Username`)
-    } else {
-        showSuccess(username)
-    }
     e.preventDefault()
 
-    if (email.value === '') {
-        showError(email, `Need An Email`)
-    } else {
-        showSuccess(email)
-    }
-    e.preventDefault()
-
-    if (password.value === '') {
-        showError(password, `Need A Password`)
-    } else {
-        showSuccess(password)
-    }
-    e.preventDefault()
-
-    if (password2.value === '') {
-        showError(password2, `Need A Password`)
-    } else {
-        showSuccess(password2)
-    }
-    e.preventDefault()
 })
 
